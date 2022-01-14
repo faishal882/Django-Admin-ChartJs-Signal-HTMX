@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+<script>
+  {% block jquery %}
+    var endpoint = 'api/chart/data/'
+    var defaultData = []
+    var labels = [];
+    $.ajax({
+        method: "GET",
+        url: endpoint,
+        success: function(data) {
+            console.log(data)
+            labels = data.labels
+            defaultData = data.default
+            setChart(labels, defaultData, data.default2)
+        },
+        error: function(error){
+            console.log("ERRROR>>>>", error)
+        }
+    })
+
+    function setChart(labels, defaultData, defaultData2){
+      const data = {
+       labels: labels,
+       datasets: [{
+          label: 'My First Dataset',
+          data: defaultData,
+          fill: true,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgb(255, 99, 132)',
+          pointBackgroundColor: 'rgb(255, 99, 132)',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgb(255, 99, 132)'
+        },
+        {
+          label: 'My Second Dataset',
+          data: defaultData2,
+          fill: true,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgb(54, 162, 235)',
+          pointBackgroundColor: 'rgb(54, 162, 235)',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgb(54, 162, 235)'
+        }]
+      };
+      const config = {
+        type: 'radar',
+        data: data,
+        options: {
+          elements: {
+            line: {
+              borderWidth: 3
+            }
+          }
+        },
+      };
+      const config2 = {
+       type: 'polarArea',
+       data: data,
+       options: {}
+      };
+      const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+      );
+      const myChart1 = new Chart(
+        document.getElementById('myChart2'),
+        config2
+      );
+    }
+
+  {% endblock %}
+</script>
+
+{% block content %}
+
+<div class="row">
+  <div class="col-sm-12">
+    <h1>Hello World</h1>
+  </div>
+  <div class="col-sm-6">
+    <canvas id="myChart"></canvas>
+  </div>
+  <div class="col-sm-6">
+    <canvas id="myChart2"></canvas>
+  </div>
+</div>
+
+{% endblock content %}
